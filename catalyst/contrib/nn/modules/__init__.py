@@ -1,6 +1,7 @@
 # flake8: noqa
 from torch.nn.modules import *
 
+from catalyst.contrib.nn.modules.amsoftmax import AMSoftmax
 from catalyst.contrib.nn.modules.arcface import ArcFace, SubCenterArcFace
 from catalyst.contrib.nn.modules.arcmargin import ArcMarginProduct
 from catalyst.contrib.nn.modules.common import (
@@ -8,8 +9,11 @@ from catalyst.contrib.nn.modules.common import (
     GaussianNoise,
     Lambda,
     Normalize,
+    ResidualBlock,
 )
 from catalyst.contrib.nn.modules.cosface import CosFace, AdaCos
+from catalyst.contrib.nn.modules.curricularface import CurricularFace
+from catalyst.contrib.nn.modules.factorized import FactorizedLinear
 from catalyst.contrib.nn.modules.lama import (
     LamaPooling,
     TemporalLastPooling,
@@ -27,6 +31,7 @@ from catalyst.contrib.nn.modules.pooling import (
     GlobalConcatPool2d,
     GlobalMaxAttnPool2d,
     GlobalMaxPool2d,
+    GeM2d,
 )
 from catalyst.contrib.nn.modules.rms_norm import RMSNorm
 from catalyst.contrib.nn.modules.se import (

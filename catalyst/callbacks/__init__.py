@@ -1,63 +1,68 @@
 # flake8: noqa
 
-from catalyst.settings import (
-    IS_QUANTIZATION_AVAILABLE,
-    IS_PRUNING_AVAILABLE,
-)
+from distutils.version import LooseVersion
+
+import torch
 
 from catalyst.callbacks.batch_overfit import BatchOverfitCallback
-from catalyst.callbacks.checkpoint import (
-    ICheckpointCallback,
-    BaseCheckpointCallback,
-    CheckpointCallback,
-    IterationCheckpointCallback,
-)
+from catalyst.callbacks.batch_transform import BatchTransformCallback
+from catalyst.callbacks.checkpoint import CheckpointCallback, ICheckpointCallback
 from catalyst.callbacks.control_flow import ControlFlowCallback
-from catalyst.callbacks.criterion import CriterionCallback
-from catalyst.callbacks.early_stop import (
-    EarlyStoppingCallback,
-    CheckRunCallback,
-)
-from catalyst.callbacks.exception import ExceptionCallback
-from catalyst.callbacks.logging import (
-    ILoggerCallback,
-    VerboseLogger,
-    ConsoleLogger,
-    TensorboardLogger,
-)
-from catalyst.callbacks.meter import MeterMetricsCallback
+from catalyst.callbacks.criterion import CriterionCallback, ICriterionCallback
 from catalyst.callbacks.metric import (
-    IMetricCallback,
-    IBatchMetricCallback,
-    ILoaderMetricCallback,
     BatchMetricCallback,
+    FunctionalBatchMetricCallback,
+    IMetricCallback,
     LoaderMetricCallback,
-    MetricCallback,
-    MetricAggregationCallback,
-    MetricManagerCallback,
 )
-from catalyst.callbacks.optimizer import (
-    IOptimizerCallback,
-    OptimizerCallback,
-    AMPOptimizerCallback,
+from catalyst.callbacks.metric_aggregation import MetricAggregationCallback
+from catalyst.callbacks.misc import (
+    CheckRunCallback,
+    EarlyStoppingCallback,
+    IBatchMetricHandlerCallback,
+    IEpochMetricHandlerCallback,
+    TimerCallback,
+    TqdmCallback,
 )
+from catalyst.callbacks.mixup import MixupCallback
+from catalyst.callbacks.optimizer import IOptimizerCallback, OptimizerCallback
+from catalyst.core.callback import (
+    Callback,
+    CallbackList,
+    CallbackNode,
+    CallbackOrder,
+    CallbackScope,
+    CallbackWrapper,
+    ICallback,
+)
+from catalyst.settings import SETTINGS
+
+if SETTINGS.onnx_required:
+    from catalyst.callbacks.onnx import OnnxCallback
+
+if SETTINGS.optuna_required:
+    from catalyst.callbacks.optuna import OptunaPruningCallback
+
 from catalyst.callbacks.periodic_loader import PeriodicLoaderCallback
-from catalyst.callbacks.scheduler import (
-    ISchedulerCallback,
-    ILRUpdater,
-    SchedulerCallback,
-    LRFinder,
-)
-from catalyst.callbacks.timer import TimerCallback
-from catalyst.callbacks.tracing import TracingCallback, TracerCallback
-from catalyst.callbacks.validation import ValidationManagerCallback
 
-from catalyst.callbacks.metrics import *
-
-if IS_QUANTIZATION_AVAILABLE:
-    from catalyst.callbacks.quantization import DynamicQuantizationCallback
-
-if IS_PRUNING_AVAILABLE:
+if SETTINGS.pruning_required:
     from catalyst.callbacks.pruning import PruningCallback
 
-from catalyst.contrib.callbacks import *
+if SETTINGS.quantization_required:
+    from catalyst.callbacks.quantization import QuantizationCallback
+
+if LooseVersion(torch.__version__) >= LooseVersion("1.8.1"):
+    from catalyst.callbacks.profiler import ProfilerCallback
+
+from catalyst.callbacks.metrics import *
+from catalyst.callbacks.scheduler import (
+    ILRUpdater,
+    ISchedulerCallback,
+    LRFinder,
+    SchedulerCallback,
+)
+
+if SETTINGS.ml_required:
+    from catalyst.callbacks.sklearn_model import SklearnModelCallback
+
+from catalyst.callbacks.tracing import TracingCallback
